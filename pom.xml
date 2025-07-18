@@ -48,6 +48,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- ✅ Microsoft SQL Server JDBC Driver -->
+		<!-- Required if connecting to Azure SQL Database or any MSSQL instance -->
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>10.2.0.jre8</version> <!-- Use jre11 or jre17 if needed -->
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
