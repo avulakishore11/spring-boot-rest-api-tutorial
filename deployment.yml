@@ -1,1 +1,55 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: springbootapi-ns
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: acr-auth-secret
+  namespace: springbootapi-ns
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJzcHJpbmdib290YXBpLWN0YWNndGdmaGtnNmE5aGsuYXp1cmVjci5pbyI6eyJ1c2VybmFtZSI6InNwcmluZ2Jvb3RhcGkiLCJwYXNzd29yZCI6IlhZT0FoaEV1U2Z1WjJsQmZiTlBOQ3lJUjBYazd2NVREUUlOeDFmT1VqdCtBQ1JBSVkrdUQiLCJlbWFpbCI6Imtpc2hvcmUzMjc4MEBnbWFpbC5jb20iLCJhdXRoIjoiYzNCeWFXNW5ZbTl2ZEdGd2FUcFlXVTlCYUdoRmRWTm1kVm95YkVKbVlrNVFUa041U1ZJd1dHczNkalZVUkZGSlRuZ3haazlWYW5RclFVTlNRVWxaSzNWRSJ9fX0=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springbootapi-deployment
+  namespace: springbootapi-ns
+  labels:
+    app: springbootapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springbootapi
+  template:
+    metadata:
+      labels:
+        app: springbootapi
+    spec:
+      nodeSelector:
+        agentpool: usernodepool
+      containers:
+        - name: springbootapi-container
+          image: springbootapi-ctacgtgfhkg6a9hk.azurecr.io/spring-boot-rest-api:V1.0
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: acr-auth-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springbootapi-service
+  namespace: springbootapi-ns
+spec:
+  type: LoadBalancer
+  selector:
+    app: springbootapi
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
 
