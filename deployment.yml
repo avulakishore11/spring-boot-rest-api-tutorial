@@ -1,7 +1,9 @@
-#apiVersion: v1
-#kind: Namespace
-#metadata:
-  #name: springbootapi-ns
+# Namespace (optional - uncomment if needed)
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: springbootapi-ns
+
 ---
 apiVersion: v1
 kind: Secret
@@ -13,6 +15,18 @@ data:
   .dockerconfigjson: eyJhdXRocyI6eyJzcHJpbmdib290YXBpYWNyLmF6dXJlY3IuaW8iOnsidXNlcm5hbWUiOiJzcHJpbmdib290YXBpYWNyIiwicGFzc3dvcmQiOiJnUE5xR3lhMXlQVXdKdCtvejNwVjNRS3VWUkhUelRQZnZVeXVkbWhpL2srQUNSQ2x1V
 jBPIiwiZW1haWwiOiJraXNob3JlMzI3ODBAZ21haWwuY29tIiwiYXV0aCI6ImMzQnlhVzVuWW05dmRHRndhV0ZqY2pwblVFNXhSM2xoTVhsUVZYZEtkQ3R2ZWpOd1ZqTlJTM1ZXVWtoVWVsUlFablpWZVhWa2JXaHBMMnNyUVVOU1EyeD
 FWakJQIn19fQ==
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+  namespace: springbootapi-ns
+type: Opaque
+stringData:
+  username: kishore@servr-1
+  password: 16nf1a0101@.
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -31,28 +45,30 @@ spec:
       labels:
         app: springbootapi
     spec:
-      nodeSelector:
-        agentpool: usernp
       containers:
         - name: springbootapi-container
           image: springbootapiacr.azurecr.io/image:v1.0
           ports:
             - containerPort: 8080
-           env:
-           - name: SPRING_DATASOURCE_URL
-            value: jdbc:mysql://servr-1.mysql.database.azure.com:3306/user-db?useSSL=true&requireSSL=true&verifyServerCertificate=false
-           - name: SPRING_DATASOURCE_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: db-secret
-                key: username
-           - name: SPRING_DATASOURCE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: db-secret
-                key: password
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://servr-1.mysql.database.azure.com:3306/user-db?useSSL=true&requireSSL=true&verifyServerCertificate=false
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
       imagePullSecrets:
         - name: acr-auth-secret
+      # Optional node selector
+      # nodeSelector:
+      #   agentpool: usernp
+
 ---
 apiVersion: v1
 kind: Service
