@@ -10,7 +10,9 @@ metadata:
   namespace: springbootapi-ns
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: eyJhdXRocyI6eyJzcHJpbmdib290YXBpYWNyLWRnY2Vja2d1Z3RhNGRuY2QuYXp1cmVjci5pbyI6eyJ1c2VybmFtZSI6InNwcmluZ2Jvb3RhcGlhY3IiLCJwYXNzd29yZCI6IlRKWWExblMrQzRoYTBaYTAyd0FXNHkxbVMraFU2cDZXZmdXRG1SbXpSMytBQ1JDU2RqV0UiLCJlbWFpbCI6Imtpc2hvcmUzMjc4MEBnbWFpbC5jb20iLCJhdXRoIjoiYzNCeWFXNW5ZbTl2ZEdGd2FXRmpjanBVU2xsaE1XNVRLME0wYUdFd1dtRXdNbmRCVnpSNU1XMVRLMmhWTm5BMlYyWm5WMFJ0VW0xNlVqTXJRVU5TUTFOa2FsZEYifX19
+  .dockerconfigjson: eyJhdXRocyI6eyJzcHJpbmdib290YXBpYWNyLmF6dXJlY3IuaW8iOnsidXNlcm5hbWUiOiJzcHJpbmdib290YXBpYWNyIiwicGFzc3dvcmQiOiJnUE5xR3lhMXlQVXdKdCtvejNwVjNRS3VWUkhUelRQZnZVeXVkbWhpL2srQUNSQ2x1V
+jBPIiwiZW1haWwiOiJraXNob3JlMzI3ODBAZ21haWwuY29tIiwiYXV0aCI6ImMzQnlhVzVuWW05dmRHRndhV0ZqY2pwblVFNXhSM2xoTVhsUVZYZEtkQ3R2ZWpOd1ZqTlJTM1ZXVWtoVWVsUlFablpWZVhWa2JXaHBMMnNyUVVOU1EyeD
+FWakJQIn19fQ==
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -33,7 +35,7 @@ spec:
         agentpool: usernp
       containers:
         - name: springbootapi-container
-          image: springbootapiacr-dgceckgugta4dncd.azurecr.io/springboot-image:V2.0
+          image: springbootapiacr.azurecr.io/image:v1.0
           ports:
             - containerPort: 8080
       imagePullSecrets:
