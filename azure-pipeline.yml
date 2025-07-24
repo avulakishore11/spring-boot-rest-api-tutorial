@@ -19,15 +19,24 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    - task: Docker@2
-      displayName: 'Build and Push Image to ACR'
+    - task: ACRTask@0
       inputs:
-        containerRegistry: '$(azureSubscription)'  # service connection
-        repository: '$(containerRepository)/$(imageName)' # just use either imagename or containerRepository
-        command: 'buildAndPush'
-        Dockerfile: '**/dockerfile'
-        tags: |
-          $(imageTag)
+        azureSubscription: 'svc-connection1'
+        azureContainerRegistry: 'azurecr13'
+        containerRepository: '$( containerRepository)'
+        contextType: 'Git'
+        githubConnection: 'avulakishore11'
+        repositoryName: 'avulakishore11/SpringBoot-RunnersExample'
+        branch: 'master'
+        dockerfileOrTaskFile: 'dockerfile'
+   # - task: Docker@2
+    #  displayName: 'Build and Push Image to ACR'
+     # inputs:
+      ## repository: '$(containerRepository)/$(imageName)' # just use either imagename or containerRepository
+        #command: 'buildAndPush'
+      #  Dockerfile: '**/dockerfile'
+       # tags: |
+        #  $(imageTag)
 - stage: Deploy
   dependsOn: Build
   displayName: 'deploy to AKS'
