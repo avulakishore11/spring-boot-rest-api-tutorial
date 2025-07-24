@@ -41,5 +41,5 @@ stages:
             connectionType: 'azureResourceManager'
             azureSubscriptionConnection: '$(azureSubscription)' # sevice connection
             azureResourceGroup: 'dev-rg'
-            kubernetesCluster: '$(AKS-cluster-name'
+            kubernetesCluster: '$(AKS-cluster-name)'
             manifests: 'deployment.yml'
