@@ -3,46 +3,43 @@ trigger:
     include:
       - main
     exclude:
-      - feature
+      - feature/*
 
 variables:
-  #azureSubscription: 'My-Azure-Service-Connection'  # Azure RM service connection name
-  #azureResourceGroup: '1-5cdbb78d-playground-sandbox'
-  # aksClusterName: 'my-aks-cluster'
-  #containerRegistry: 'mainwebappacr'
-  #imageName: 'myapp'
-  #imageTag: '$(Build.BuildId)'
-  - group: 'Docker Hub authentication credentials' # this is the name of Variable Group
+  - group: 'acr-settings'  # Load variables from the variable group
+  - name: imageTag
+    value: $(Build.BuildId)  # Override if needed
 
 stages:
 - stage: Build
-  displayName: 'Build and Push Docker Image to Docker'
+  displayName: 'Build and Push Docker Image to ACR'
   jobs:
   - job: BuildPush
-    displayName: 'Build and Push'
+    displayName: 'Build and Push Image'
     pool:
-      name: 'Default'
+      vmImage: 'ubuntu-latest'
     steps:
-   # - task: Docker@2
-     # displayName: 'Login to ACR'
-     # inputs:
-      #  command: login
-       # containerRegistry: 'myacr-service-connection' # Docker registry service connection
-
-    #- task: Docker@2
-     # displayName: 'Build Docker Image'
-      #inputs:
-       # command: build
-        #Dockerfile: 'dockerfile'
-        #tags: |
-         # $(containerRegistry)/$(imageName):$(imageTag)
-
     - task: Docker@2
-      displayName: Build and push an image to Docker Hub
+      displayName: 'Build and Push Image to ACR'
       inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
+        containerRegistry: '$(azureSubscription)'  # service connection
+        repository: '$(containerRepository)/$(imageName)' # just use either imagename or containerRepository
+        command: 'buildAndPush'
+        Dockerfile: '**/dockerfile'
         tags: |
-          $(tag)
+          $(imageTag)
+- stage: Deploy
+  dependsOn: Build
+  displayName: 'deploy to AKS'
+  jobs:
+    - job: 
+      displayName: deploy to AKS
+      steps:
+        - task: KubernetesManifest@1
+          inputs:
+            action: 'deploy'
+            connectionType: 'azureResourceManager'
+            azureSubscriptionConnection: '$(azureSubscription)' # sevice connection
+            azureResourceGroup: 'dev-rg'
+            kubernetesCluster: '$(AKS-cluster-name'
+            manifests: 'deployment.yml'
