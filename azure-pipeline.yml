@@ -18,18 +18,18 @@ stages:
   jobs:  
   - job: Build
     displayName: Build job
-    pool:
-      vmImage: $(vmImageName)
     steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(acr-registary)
-        tags: |
-          $(imagetag)
+      
+  
+      - task: Docker@2
+        displayName: Build and push an image to container registry
+        inputs:
+          command: buildAndPush
+          repository: $(imageRepository)
+          dockerfile: $(dockerfilePath)
+          containerRegistry: $(acr-registary)
+          tags: |
+            $(imagetag)
 
    # - task: Docker@2
     #  displayName: 'Build and Push Image to ACR'
