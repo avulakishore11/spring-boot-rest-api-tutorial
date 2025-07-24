@@ -17,7 +17,7 @@ stages:
   - job: BuildPush
     displayName: 'Build and Push Image'
     pool:
-      vmImage: 'ubuntu-latest'
+      name: 'Default'
     steps:
     - task: ACRTask@0
       inputs:
