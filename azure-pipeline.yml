@@ -4,6 +4,8 @@ trigger:
       - main
     exclude:
       - feature/*
+pool:
+ name: 'Default'
 
 variables:
   - group: 'acr-settings'  # Load variables from the variable group
@@ -16,8 +18,6 @@ stages:
   jobs:
   - job: BuildPush
     displayName: 'Build and Push Image'
-    pool:
-      name: 'Default'
     steps:
     - task: ACRTask@0
       inputs:
